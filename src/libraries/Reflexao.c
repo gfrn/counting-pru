@@ -11,8 +11,9 @@
 #include "Reflexao.h"
 
 
-#define PRU_NUM         	0
+#define PRU_NUM             0
 #define	PULSAR			0xff
+#define PRU_BINARY 		"/usr/bin/Reflexao.bin"
 
 
 
@@ -59,7 +60,7 @@ int init_start_PRU(){
 	prudata[0] = 0;
 
 	// ----- Executar codigo na PRU
-	prussdrv_exec_program (PRU_NUM, "/usr/bin/Reflexao.bin");
+	prussdrv_exec_program (PRU_NUM, PRU_BINARY);
 
 	return 0;
 }
@@ -86,9 +87,8 @@ int pulsar_PRU(){
 		prudata[2] = 0;
 		prudata[3] = 0;
 		prudata[4] = 0;
-//		printf("Reinicializando firmware...");
-//		prussdrv_exec_program (PRU_NUM, "./Reflexao.bin");
-		init_start_PRU();
+	    prussdrv_exec_program (PRU_NUM, PRU_BINARY);
+
 	}
 
 	// ----- Calculo do tempo de propagacao
