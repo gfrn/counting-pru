@@ -5,9 +5,9 @@ export PINS=/sys/kernel/debug/pinctrl/44e10800.pinmux/pins
 
 echo "Compilando Device Tree Overlay..."
 
-dtc -O dtb -o Reflexao-00A0.dtbo -b 0 -@ Reflexao-00A0.dts
+dtc -O dtb -o CountingPRU-00A0.dtbo -b 0 -@ CountingPRU-00A0.dts
 
-cp Reflexao-00A0.dtbo /lib/firmware
+cp CountingPRU-00A0.dtbo /lib/firmware
 
-rm Reflexao-00A0.dtbo
+rm CountingPRU-00A0.dtbo
 

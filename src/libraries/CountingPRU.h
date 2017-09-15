@@ -12,14 +12,17 @@ extern "C" {
 #endif
 /* PRU SHARED MEMORY (12kB) - MAPPING
  *
- * prudata[0] = pulse verify request
- * prudata[1] = ||
- * prudata[2] = || Response
- * prudata[3] = || Time
- * prudata[4] = ||
+ * prudata[00] = Start/Stop/DataReady flag
+ * prudata[01] = Data Ready LNLS
+ * prudata[02] = Data Ready Bergoz
+ * prudata[04..07] = Count 1 LNLS
+ * prudata[08..11] = Count 2 LNLS
+ * prudata[12..15] = Count 3 LNLS
+ * prudata[16..19] = Count 4 LNLS
+ * prudata[20..23] = Count 1 Bergoz
+ * prudata[24..27] = Count 2 Bergoz
  *
  */
-
 
 
 /* INICIALIZACAO DA PRU
@@ -36,12 +39,9 @@ int init_start_PRU();
 void close_PRU();
 
 
-/* INICIALIZACAO DA PRU
- * --Retorno--
- * Distancia de propagacao (ida) até o problema, em metros.
- * Se 0, não houve reflexao.
+/* CONTAGEM
 */
-float pulsar_PRU();
+void Counting(float time, uint32_t *data);
 
 
 

@@ -11,11 +11,9 @@
 if (__name__ == "__main__"):
     exit()
 
-# Importa o módulo ctypes
+# Importa o modulo ctypes
 import ctypes
 
-# Define constante de propagacao
-VP = 4.1 # ns/m
 
 # Carrega as bibliotecas dinâmicas das quais a biblioteca libPRUserial485 depende (bibliotecas da
 # PRU)
@@ -23,20 +21,27 @@ ctypes.CDLL("libprussdrv.so", mode = ctypes.RTLD_GLOBAL)
 ctypes.CDLL("libprussdrvd.so", mode = ctypes.RTLD_GLOBAL)
 
 # Carrega a biblioteca libReflexao
-libReflexao = ctypes.CDLL("libReflexao.so", mode = ctypes.RTLD_GLOBAL)
-libReflexao.pulsar_PRU.restype = ctypes.c_float
+libCountingPRU = ctypes.CDLL("libCountingPRU.so", mode = ctypes.RTLD_GLOBAL)
+
+# Buffer para contadores
+count_buffer = (ctypes.c_uint32 * 6)()
 
 
 # Procedimento de inicialização da PRU
 def Init():
-    libReflexao.init_start_PRU()
+    libCountingPRU.init_start_PRU()
 
 
 # Enviar um pulso para a rede e verificar descasamento
-def Pulsar():
-    return(libReflexao.pulsar_PRU())
+def Counting(time_base):
+    libCountingPRU.Counting(ctypes.c_float(time_base), ctypes.byref(count_buffer))
+    answer = []
+    for i in range (6):
+        answer.append(count_buffer[i])
+    return answer
+
 
 
 # Encerra a PRU
 def Close():
-    libReflexao.close_PRU()
+    libCountingPRU.close_PRU()
