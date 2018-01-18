@@ -1,0 +1,5 @@
+Chave TS5A:
+- Footprint e alimentação
+
+Capacitor 470uF:
+- Footprint
