@@ -1,5 +1,12 @@
 Chave TS5A:
 - Footprint e alimentação
 
+
 Capacitor 470uF:
 - Footprint
+
+
+Trilha 5V que vai para BLM-LNLS:
+- Aumentar largura
+- Fazer ligação direta
+- Incluir filtros (100nF e 10uF na saída POE - XXXXXpF ao lado do conector BLM-LNLS)

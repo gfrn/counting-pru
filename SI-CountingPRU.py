@@ -28,9 +28,13 @@ BLMs = ["LNLS1", "LNLS2", "LNLS3", "LNLS4","Bergoz1-Interno", "Bergoz2-Externo"]
 PVs = {}
 for module in BLMs:
     if module == "Bergoz1-Interno" or module == "Bergoz2-Externo":
-	PVs["SiriusBLM:PRU:" + module] = { "type" : "int", "unit" : "electrons per second"}
+	PVs["UVX:CountingPRU:" + sys.argv[1] + ":" + module] = { "type" : "int", "unit" : "electrons per second"}
     else:
-	PVs["SiriusBLM:PRU:" + module] = { "type" : "int", "unit" : "gama per second"}	
+	PVs["UVX:CountingPRU:" + sys.argv[1] + ":" + module] = { "type" : "int", "unit" : "gama per second"}
+
+PVs["UVX:CountingPRU:" + sys.argv[1] + ":TimeBase"] = { "type" : "int", "unit" : "seconds"}
+
+
 
 # Inicializacao da biblioteca de contagem
 CountingPRU.Init()
@@ -51,8 +55,11 @@ class PSDriver(Driver):
 
         # Define condicoes iniciais das variáveis EPICS de escrita
         for module in BLMs:
-                self.setParam("SiriusBLM:PRU:" + module, 0)
-                self.setParamStatus("SiriusBLM:PRU:" + module, Alarm.NO_ALARM, Severity.NO_ALARM)
+                self.setParam("UVX:CountingPRU:" + sys.argv[1] + ":" + module, 0)
+                self.setParamStatus("UVX:CountingPRU:" + sys.argv[1] + ":" + module, Alarm.NO_ALARM, Severity.NO_ALARM)
+
+        self.setParam("UVX:CountingPRU:" + sys.argv[1] + ":TimeBase", 1)
+        self.setParamStatus("UVX:CountingPRU:" + sys.argv[1] + ":TimeBase", Alarm.NO_ALARM, Severity.NO_ALARM)
 
         # Fila de prioridade
         self.queue = PriorityQueue()
@@ -76,7 +83,7 @@ class PSDriver(Driver):
     def scanThread(self):
         while (True):
                 self.queue.put((1, ["READ_COUNTERS"]))
-                self.event.wait(1)
+                self.event.wait(self.getParam("UVX:CountingPRU:" + sys.argv[1] + ":TimeBase"))
 
     # Thread que processa a fila de operacoes
     def processThread(self):
@@ -91,12 +98,12 @@ class PSDriver(Driver):
             if (item[0] == "READ_COUNTERS"):
 
                 # Operação de leitura
-                # Solicita os valores - BASE DE TEMPO = 1s
-                Counter = CountingPRU.Counting(1)
+                # Solicita os valores - BASE DE TEMPO
+                Counter = CountingPRU.Counting(self.getParam("UVX:CountingPRU:" + sys.argv[1] + ":TimeBase"))
 
                 # Atualiza os valores das variáveis EPICS e bloco de leitura associados
                 for channel in range (len(BLMs)):
-                        self.updatePV("SiriusBLM:PRU:" + BLMs[channel], Counter[channel])
+                        self.updatePV("UVX:CountingPRU:" + sys.argv[1] + ":" + BLMs[channel], Counter[channel])
                 self.updatePVs()
 
 
@@ -113,7 +120,14 @@ class PSDriver(Driver):
 
     # Nao permite escrita em PVs
     def write(self, reason, value):
-        return(False)
+        if reason[-9:] == ":TimeBase":
+            self.setParam(reason, value)
+            self.updatePVs()
+            return (True)
+
+        else:
+            return(False)
+
 
 
 # Rotina executada quando o programa e lancado
@@ -132,4 +146,3 @@ if (__name__ == '__main__'):
     # Laco que executa indefinidamente
     while (True):
         CAserver.process(0.1)
-
