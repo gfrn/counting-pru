@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 # -*- coding: utf-8 -*-
 
 
@@ -12,6 +12,7 @@
 # Modulos necessarios
 from pcaspy import Driver, Alarm, Severity, SimpleServer
 from Queue import PriorityQueue
+import Adafruit_BBIO.GPIO as GPIO
 import traceback
 import threading
 import time
@@ -21,14 +22,34 @@ import sys
 import CountingPRU
 
 
+
 # Configuracao dos BLMs associados a placa
-BLMs = ["LNLS1", "LNLS2", "LNLS3", "LNLS4","Bergoz1-Interno", "Bergoz2-Externo"]
+BLMs = ["LNLS1", "LNLS2", "LNLS3", "LNLS4","Bergoz1", "Bergoz2"]
+
+# Pinos Inhibit
+InhA1 = "P9_14"
+InhB1 = "P9_16"
+InhA2 = "P9_13"
+InhB2 = "P9_15"
+
+GPIO.setup(InhA1, GPIO.OUT)
+GPIO.output(InhA1, GPIO.LOW)
+GPIO.setup(InhB1, GPIO.OUT)
+GPIO.output(InhB1, GPIO.LOW)
+
+GPIO.setup(InhA2, GPIO.OUT)
+GPIO.output(InhA2, GPIO.LOW)
+GPIO.setup(InhB2, GPIO.OUT)
+GPIO.output(InhB2, GPIO.LOW)
+
 
 # Define as PVs que serao servidas pelo programa
 PVs = {}
 for module in BLMs:
-    if module == "Bergoz1-Interno" or module == "Bergoz2-Externo":
+    if module == "Bergoz1" or module == "Bergoz2":
 	PVs["UVX:CountingPRU:" + sys.argv[1] + ":" + module] = { "type" : "int", "unit" : "electrons per second"}
+	PVs["UVX:CountingPRU:" + sys.argv[1] + ":" + module + "-InhA"] = { "type" : "enum", "enums" : ["off", "on"]}
+        PVs["UVX:CountingPRU:" + sys.argv[1] + ":" + module + "-InhB"] = { "type" : "enum", "enums" : ["off", "on"]}
     else:
 	PVs["UVX:CountingPRU:" + sys.argv[1] + ":" + module] = { "type" : "int", "unit" : "gama per second"}
 
@@ -57,6 +78,12 @@ class PSDriver(Driver):
         for module in BLMs:
                 self.setParam("UVX:CountingPRU:" + sys.argv[1] + ":" + module, 0)
                 self.setParamStatus("UVX:CountingPRU:" + sys.argv[1] + ":" + module, Alarm.NO_ALARM, Severity.NO_ALARM)
+		if module == "Bergoz1" or module == "Bergoz2":
+			self.setParam("UVX:CountingPRU:" + sys.argv[1] + ":" + module + "-InhA", 0)
+			self.setParam("UVX:CountingPRU:" + sys.argv[1] + ":" + module + "-InhB", 0)
+			self.setParamStatus("UVX:CountingPRU:" + sys.argv[1] + ":" + module + "-InhA", Alarm.NO_ALARM, Severity.NO_ALARM)
+			self.setParamStatus("UVX:CountingPRU:" + sys.argv[1] + ":" + module + "-InhB", Alarm.NO_ALARM, Severity.NO_ALARM)
+
 
         self.setParam("UVX:CountingPRU:" + sys.argv[1] + ":TimeBase", 1)
         self.setParamStatus("UVX:CountingPRU:" + sys.argv[1] + ":TimeBase", Alarm.NO_ALARM, Severity.NO_ALARM)
@@ -85,6 +112,8 @@ class PSDriver(Driver):
                 self.queue.put((1, ["READ_COUNTERS"]))
                 self.event.wait(self.getParam("UVX:CountingPRU:" + sys.argv[1] + ":TimeBase"))
 
+
+
     # Thread que processa a fila de operacoes
     def processThread(self):
         # Laco que executa indefinidamente
@@ -103,27 +132,53 @@ class PSDriver(Driver):
 
                 # Atualiza os valores das variáveis EPICS e bloco de leitura associados
                 for channel in range (len(BLMs)):
-                        self.updatePV("UVX:CountingPRU:" + sys.argv[1] + ":" + BLMs[channel], Counter[channel])
+                        self.setParam("UVX:CountingPRU:" + sys.argv[1] + ":" + BLMs[channel], Counter[channel])
                 self.updatePVs()
 
 
-    def updatePV(self, pv_name, new_value):
-        update_flag = 0
-        if (new_value != self.pvDB[pv_name].value):
-            self.setParam(pv_name, new_value)
-            update_flag = 1
-        if (self.pvDB[pv_name].severity == Severity.INVALID_ALARM):
-            self.setParamStatus(pv_name, Alarm.NO_ALARM, Severity.NO_ALARM)
-            update_flag = 1
-        if (update_flag == 1):
-            self.updatePVs()
 
     # Nao permite escrita em PVs
     def write(self, reason, value):
+
         if reason[-9:] == ":TimeBase":
             self.setParam(reason, value)
             self.updatePVs()
             return (True)
+
+	# Modo Calibracao
+	elif reason[-6:-1] == "1-Inh":
+		if reason[-1:] == "A":
+			if value:
+				GPIO.output(InhA1, GPIO.HIGH)
+			else:
+				GPIO.output(InhA1, GPIO.LOW)
+
+		elif reason[-1:] == "B": 
+			if value:
+                                GPIO.output(InhB1, GPIO.HIGH)
+                        else:
+                                GPIO.output(InhB1, GPIO.LOW)
+
+		self.setParam(reason, value)
+            	self.updatePVs()
+            	return (True)
+
+	elif reason[-6:-1] == "2-Inh":	
+		if reason[-1:] == "A":
+                        if value:
+                                GPIO.output(InhA2, GPIO.HIGH)
+                        else:
+                                GPIO.output(InhA2, GPIO.LOW)
+
+                elif reason[-1:] == "B":
+                        if value:
+                                GPIO.output(InhB2, GPIO.HIGH)
+                        else:
+                                GPIO.output(InhB2, GPIO.LOW)
+
+                self.setParam(reason, value)
+                self.updatePVs()
+                return (True)
 
         else:
             return(False)

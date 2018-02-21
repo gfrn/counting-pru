@@ -8,7 +8,9 @@ echo "Compilando Device Tree Overlay..."
 dtc -O dtb -o CountingPRU-00A0.dtbo -b 0 -@ CountingPRU-00A0.dts
 dtc -O dtb -o INHIB-00A0.dtbo -b 0 -@ INHIB-00A0.dts
 
+cp CountingPRU-00A0.dtbo /lib/firmware
 cp INHIB-00A0.dtbo /lib/firmware
 
+rm CountingPRU-00A0.dtbo
 rm INHIB-00A0.dtbo
 
