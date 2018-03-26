@@ -90,11 +90,11 @@ CONTA3:
 	QBBC	FIM3, ENT3		// Jump, se nao ha pulso
 	ADD	COUNT3, COUNT3, 1	// ||
 	CLR	SAI3			// || Conta +1 e zera pulso
-FIM2:	SET	SAI3			// ||
+FIM3:	SET	SAI3			// ||
 
 
 // ----- 4 -----
-CONTA2:
+CONTA4:
 	QBBC	FIM4, ENT4		// Jump, se nao ha pulso
 	ADD	COUNT4, COUNT4, 1	// ||
 	CLR	SAI4			// || Conta +1 e zera pulso
