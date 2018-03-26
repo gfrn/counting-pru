@@ -30,7 +30,7 @@
 .origin 0						// start of program in PRU memory
 .entrypoint COMECA					// program entry point (for a debugger)
 
-#include "CountPRU0.hp"
+#include "CountBergozLNLS.hp"
 #define AM33XX
 
 // Clear Saidas
