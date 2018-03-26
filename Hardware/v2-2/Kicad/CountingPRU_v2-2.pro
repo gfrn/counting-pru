@@ -1,4 +1,4 @@
-update=Qui 15 Fev 2018 10:04:22 -02
+update=Qui 08 Mar 2018 09:06:07 -03
 version=1
 last_client=kicad
 [pcbnew]
@@ -25,6 +25,16 @@ version=1
 NetIExt=net
 [general]
 version=1
+[schematic_editor]
+version=1
+PageLayoutDescrFile=
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=Pcbnew
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60
 [eeschema]
 version=1
 LibDir=
@@ -60,13 +70,3 @@ LibName28=atmel
 LibName29=contrib
 LibName30=valves
 LibName31=/run/user/1000/gvfs/smb-share:server=centaurus,share=repositorio/LNLS/Grupos/CONT/Library/Controle/Controle
-[schematic_editor]
-version=1
-PageLayoutDescrFile=
-PlotDirectoryName=
-SubpartIdSeparator=0
-SubpartFirstId=65
-NetFmtName=Pcbnew
-SpiceForceRefPrefix=0
-SpiceUseNetNumbers=0
-LabSize=60
