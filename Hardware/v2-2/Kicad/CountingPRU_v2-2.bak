@@ -396,9 +396,9 @@ Connection ~ 9750 4000
 Wire Wire Line
 	10110 3220 10110 3170
 Wire Wire Line
-	9760 3170 10460 3170
+	10460 3170 9760 3170
 Wire Wire Line
-	10460 3170 10460 2720
+	10460 2620 10460 3170
 Wire Wire Line
 	10460 3020 10360 3020
 Wire Wire Line
@@ -1114,9 +1114,9 @@ Text Label 8825 2895 2    60   ~ 0
 Wire Wire Line
 	8250 3195 8250 3145
 Wire Wire Line
-	7900 3145 8600 3145
+	8600 3145 7900 3145
 Wire Wire Line
-	8600 3145 8600 2695
+	8600 2595 8600 3145
 Wire Wire Line
 	8600 2995 8500 2995
 Wire Wire Line
@@ -1125,7 +1125,7 @@ Connection ~ 8600 2995
 Wire Wire Line
 	8000 2995 7900 2995
 Wire Wire Line
-	7900 2295 7900 3145
+	7900 3145 7900 2295
 Connection ~ 8250 3145
 Wire Wire Line
 	8000 2695 7900 2695
@@ -1140,7 +1140,7 @@ Wire Wire Line
 	8000 2395 7900 2395
 Connection ~ 7900 2495
 Wire Wire Line
-	8000 2295 7900 2295
+	7900 2295 8000 2295
 Connection ~ 7900 2395
 Wire Wire Line
 	8500 2795 8600 2795
@@ -1402,8 +1402,6 @@ F 3 "" H 920 6555 50  0000 C CNN
 	1    920  6555
 	1    0    0    -1  
 $EndComp
-NoConn ~ 10360 2620
-NoConn ~ 8500 2595
 Text Label 5330 6600 2    60   ~ 0
 CONTA_8
 Text Label 5330 5850 2    60   ~ 0
@@ -1492,4 +1490,10 @@ Text Label 10275 5475 0    60   ~ 0
 CONTA_7_BBB
 Text Label 9775 5575 2    60   ~ 0
 CLEAR_7
+Wire Wire Line
+	8500 2595 8600 2595
+Connection ~ 8600 2695
+Wire Wire Line
+	10360 2620 10460 2620
+Connection ~ 10460 2720
 $EndSCHEMATC

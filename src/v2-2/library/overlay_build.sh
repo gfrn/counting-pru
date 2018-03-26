@@ -9,6 +9,7 @@ dtc -O dtb -o CountingPRU-00A0.dtbo -b 0 -@ CountingPRU-00A0.dts
 dtc -O dtb -o INHIB-00A0.dtbo -b 0 -@ INHIB-00A0.dts
 
 cp INHIB-00A0.dtbo /lib/firmware
+cp CountingPRU-00A0.dtbo /lib/firmware
 
 rm INHIB-00A0.dtbo
-
+rm CountingPRU-00A0.dtbo

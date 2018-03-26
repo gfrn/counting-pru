@@ -166,10 +166,10 @@ Text Label 7875 6275 0    60   ~ 0
 CLEAR_4
 Text Label 7375 6275 2    60   ~ 0
 CLEAR_3
-Text Notes 5005 7705 0    79   Italic 0
-BERGOZ: 	16.67MHz (2 canais)\nLNLS:					10.00MHz (4 canais)
-Text Notes 5120 7430 0    118  Italic 24
-Taxa de Contagem
+Text Notes 4245 7725 0    79   Italic 0
+1 canal: 	14.29MHz		|	3 canais:	11.11MHz\n2 canais:	12.50MHz		|	4 canais:	10.00MHz
+Text Notes 4310 7415 0    118  Italic 24
+Taxa Máxima de Contagem\nCanais conectados por PRU
 Text Label 10275 4475 0    60   ~ 0
 SYS_RST
 Text Label 8540 3830 2    60   ~ 0
