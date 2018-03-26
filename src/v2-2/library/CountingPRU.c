@@ -48,7 +48,7 @@ void Counting(float time, uint32_t *data);
 void close_PRU(){
 	// ----- Desabilita PRU e fecha mapeamento da shared RAM
 	prussdrv_pru_disable(PRU_LNLS);
-	prussdrv_pru_disable(PRU_Bergoz);
+	prussdrv_pru_disable(PRU_Bergoz_LNLS);
 	prussdrv_exit();
 }
 
