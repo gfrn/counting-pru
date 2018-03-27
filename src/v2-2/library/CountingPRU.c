@@ -72,7 +72,7 @@ int init_start_PRU(){
 	// ----- Mapeamento e inicializacao da Shared RAM
 	prussdrv_map_prumem(PRUSS0_SHARED_DATARAM, (void**)&prudata);
 
-	for(i=0; i<28; i++)
+	for(i=0; i<36; i++)
 		prudata[i] = 0;
 
 
@@ -116,5 +116,3 @@ void Counting(float time, uint32_t *data){
 
 	return;
 }
-
-
