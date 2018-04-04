@@ -37,10 +37,10 @@
 
 // Clear Saidas
 BEGINNING:
-	SET		SAI1
-	SET		SAI2
-	SET		SAI3
-	SET		SAI4
+	SET		OUT1
+	SET		OUT2
+	SET		OUT3
+	SET		OUT4
 
 
 // Clear Counters and Registers
