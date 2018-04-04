@@ -15,24 +15,24 @@
                 "pru0",
                 "pru1",
                 // PRU Input pins
-		        	"P8.15","pr1_pru0_pru_r31_15", // Conta1 
-		        	"P9.24","pr1_pru0_pru_r31_16", // Conta2
-		        	"P8.42","pr1_pru1_pru_r31_5",  // Conta3
-		        	"P8.41","pr1_pru1_pru_r31_4",  // Conta4
-		        	"P8.40","pr1_pru1_pru_r31_7",  // Conta5
-		        	"P8.39","pr1_pru1_pru_r31_6",  // Conta6
-				"P9.30","pr1_pru0_pru_r31_2", // Conta7
-				"P9.28","pr1_pru0_pru_r31_3", // Conta8
-                // PRU Output pins
-				"P8.12","pr1_pru0_pru_r30_5", // Clear1
-				"P9.27","pr1_pru0_pru_r30_14",  // Clear2
-				"P8.45","pr1_pru1_pru_r30_0",  // Clear3
-				"P8.46","pr1_pru1_pru_r30_1",  // Clear4
-				"P8.44","pr1_pru1_pru_r30_3",  // Clear5
-				"P8.43","pr1_pru1_pru_r30_2",  // Clear6
-				"P9.31","pr1_pru0_pru_r30_0",  // Clear7
-				"P9.29 ","pr1_pru0_pru_r30_1";  // Clear8
+		        	"P8.15","pr1_pru0_pru_r31_15",	// Count1
+		        	"P9.24","pr1_pru0_pru_r31_16",	// Count2
+		        	"P8.42","pr1_pru1_pru_r31_5",	// Count3
+		        	"P8.41","pr1_pru1_pru_r31_4",	// Count4
+		        	"P8.40","pr1_pru1_pru_r31_7",	// Count5
+		        	"P8.39","pr1_pru1_pru_r31_6",	// Count6
+					"P9.30","pr1_pru0_pru_r31_2",	// Count7
+					"P9.28","pr1_pru0_pru_r31_3",	// Count8
 
+                // PRU Output pins
+					"P8.12","pr1_pru0_pru_r30_5",	// Clear1
+					"P9.27","pr1_pru0_pru_r30_14",	// Clear2
+					"P8.45","pr1_pru1_pru_r30_0",	// Clear3
+					"P8.46","pr1_pru1_pru_r30_1",	// Clear4
+					"P8.44","pr1_pru1_pru_r30_3",	// Clear5
+					"P8.43","pr1_pru1_pru_r30_2",	// Clear6
+					"P9.31","pr1_pru0_pru_r30_0",	// Clear7
+					"P9.29 ","pr1_pru0_pru_r30_1";	// Clear8
 
 
     // MUX Bit Maps:
@@ -73,9 +73,9 @@
     fragment@10 {
         target = <&pruss>;
         __overlay__ {
-            status = "okay";  
+            status = "okay";
             pinctrl-names = "default";
-            pinctrl-0     = <&pruss_pins>; 
+            pinctrl-0     = <&pruss_pins>;
         };
     };
 };
