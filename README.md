@@ -15,7 +15,7 @@ Patricia H. Nallin ( _patricia.nallin@lnls.br_ )
 _____
 _Brief Description:_
 
-Designed as a PRU-based system, this product was developed in order to count trains of pulses either from Bergoz Differential BLM or from LNLS Gamma Sensors (4-channel standard TTL signal), up to 14 MHz.
+Designed as a PRU-based system, this product was developed in order to count trains of pulses during a period of time either from Bergoz Differential BLM or from LNLS Gamma Sensors (4-channel standard TTL signal), up to 14 MHz.
 
 The project consists on:
 
