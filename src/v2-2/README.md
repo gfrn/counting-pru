@@ -43,7 +43,7 @@ PRU initialization. Shared memory configuration and loading binaries into both P
 - ```Counting(time_base)```
 
 Starts counting during time_base period, in seconds. This method will be blocking until the end of counting.  
-Returns: list of 32-bit integer, corresponding to a channel counter value
+Returns: list of 8 itens (32-bit integer each), corresponding to a channel counter value
 
 
 - ```Close()```
