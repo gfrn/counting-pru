@@ -72,7 +72,7 @@ START_LOOP:
 	SET		OUT4
 
 // ----- 1 -----
-C1:
+LOOP1:
 	QBBC	END1, IN1			   	// Jump, se nao ha pulso
 	ADD		COUNT1, COUNT1, 1	   	// ||
 	CLR		OUT1					// || Conta +1 e zera pulso
@@ -81,7 +81,7 @@ END1:
 
 
 // ----- 2 -----
-C2:
+LOOP2:
 	QBBC	END2, IN2				// Jump, se nao ha pulso
 	ADD		COUNT2, COUNT2, 1		// ||
 	CLR		OUT2					// || Conta +1 e zera pulso
@@ -90,7 +90,7 @@ END2:
 
 
 // ----- 3 -----
-C3:
+LOOP3:
 	QBBC	END3, IN3				// Jump, se nao ha pulso
 	ADD		COUNT3, COUNT3, 1		// ||
 	CLR		OUT3					// || Conta +1 e zera pulso
@@ -99,7 +99,7 @@ END3:
 
 
 // ----- 4 -----
-C4:
+LOOP4:
 	QBBC	END4, IN4				// Jump, se nao ha pulso
 	ADD		COUNT4, COUNT4, 1		// ||
 	CLR		OUT4					// || Conta +1 e zera pulso
@@ -109,7 +109,7 @@ END4:
 // ----- VERIFY END ------------------------------------------------------------
 V_END:
 	LBCO	I, SHRAM_BASE, 0, 1		// Load Status
-	QBNE	C1, I, STOP				// Wait until == 0x00 = Stop
+	QBNE	LOOP1, I, STOP				// Wait until == 0x00 = Stop
 
 
 
