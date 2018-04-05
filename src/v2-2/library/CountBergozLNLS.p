@@ -1,4 +1,5 @@
-// PRU0 - BERGOZ and LNLS
+// PRU0 - CountingPRU
+// BERGOZ and LNLS
 #define OWN_RAM				0x000
 #define OTHER_RAM			0x020
 #define SHARED_RAM			0x100
