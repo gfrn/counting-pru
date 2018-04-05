@@ -1,4 +1,5 @@
-// PRU1 - LNLS/Carlos
+// PRU1 - CountingPRU
+// LNLS/Carlos
 #define OWN_RAM				0x000
 #define OTHER_RAM			0x020
 #define SHARED_RAM			0x100
