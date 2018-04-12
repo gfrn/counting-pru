@@ -1,3 +1,22 @@
+/*
+CountingPRU.h
+v2-2
+
+--------------------------------------------------------------------------------
+PRU-based Counters
+--------------------------------------------------------------------------------
+Interfaces with CountingPRU Hardware (v2-2) in order to count trains of pulses
+either from Bergoz Differential BLM or from LNLS Gamma Sensors (4-channel
+standard TTL signal)
+
+Brazilian Synchrotron Light Laboratory (LNLS/CNPEM)
+Controls Group
+
+Author: Patricia HENRIQUES NALLIN
+Date: March/2018
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -27,26 +46,28 @@ extern "C" {
  *
  */
 
-/* INICIALIZACAO DA PRU
- * --Retorno--
- *  0: Ok, bem inicializada
- * -1: Erro
+
+/* PRU INITIALIZATION
+ * --Returns--
+ *  0: successfully initialized
+ * -1: Error
 */
 int init_start_PRU();
 
 
-/* FINALIZACAO DA PRU
- * -----
+
+/* COUNTING PULSES
+ * --Parameters--
+ * time_base:	Time base for counting pulses, in seconds
+ * Data:		8-position vector for storing counter values
+*/
+void Counting(float time_base, uint32_t *data);
+
+
+
+/* CLOSING PRU
 */
 void close_PRU();
-
-
-/* CONTAGEM
-*/
-void Counting(float time, uint32_t *data);
-
-
-
 
 
 #ifdef __cplusplus
