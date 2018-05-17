@@ -3,12 +3,16 @@ cd library
 
 echo "********** COUNTING PRU **********"
 
-echo "."
-echo ".."
-echo "..."
-echo "Building Device Tree Overlay..."
-./overlay_build.sh
-echo "OK"
+KERNEL_VERSION=`uname -r`;
+if [ "${KERNEL_VERSION%.*}" = "3.8" ]; then
+    echo "."
+    echo ".."
+    echo "..."
+    echo "Building Device Tree Overlay..."
+    ./overlay_build.sh
+    echo "OK"
+fi
+
 
 echo "."
 echo ".."
@@ -29,7 +33,7 @@ install -m0755 CountingPRU.h /usr/include
 mv CountLNLS.bin /usr/bin
 mv CountBergozLNLS.bin /usr/bin
 
-rm CountingPRU.o libCountingPRU.so libCountingPRU.a 
+rm CountingPRU.o libCountingPRU.so libCountingPRU.a
 echo "OK"
 
 
