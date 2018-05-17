@@ -1,13 +1,12 @@
 #!/usr/bin/env sh
 /sbin/modprobe uio_pruss
-echo CountingPRU > /sys/devices/bone_capemgr.9/slots
-echo INHIB > /sys/devices/bone_capemgr.9/slots
+
 
 KERNEL_VERSION=`uname -r`;
 if [ "${KERNEL_VERSION%.*}" = "3.8" ]; then
     echo "Configuring pins for kernel 3.8.x"
-    echo PRUserial485 > /sys/devices/bone_capemgr.9/slots
-    echo ADDRserial485 > /sys/devices/bone_capemgr.9/slots
+    echo CountingPRU > /sys/devices/bone_capemgr.9/slots
+    echo INHIB > /sys/devices/bone_capemgr.9/slots
 
 elif [ "${KERNEL_VERSION%.*}" = "4.14" ]; then
     echo "Configuring pins for kernel 4.14.x"
@@ -20,7 +19,7 @@ elif [ "${KERNEL_VERSION%.*}" = "4.14" ]; then
     config-pin P8_39 pruin          # Count6
     config-pin P9_30 pruin          # Count7
     config-pin P9_28 pruin          # Count8
-    
+
     config-pin P8_12 pruout         # Clear1
     config-pin P9_27 pruout         # Clear2
     config-pin P8_45 pruout         # Clear3
