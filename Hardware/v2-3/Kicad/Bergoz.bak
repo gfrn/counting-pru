@@ -28,6 +28,7 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
+LIBS:Controle
 LIBS:CountingPRU_v2-3-cache
 EELAYER 25 0
 EELAYER END

@@ -28,6 +28,7 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
+LIBS:Controle
 LIBS:CountingPRU_v2-3-cache
 EELAYER 25 0
 EELAYER END
@@ -610,7 +611,7 @@ NoConn ~ 7875 5175
 NoConn ~ 7375 5075
 NoConn ~ 7375 5175
 NoConn ~ 7875 4375
-NoConn ~ 7875 5375
+NoConn ~ 7875 5275
 NoConn ~ 7875 5475
 NoConn ~ 7875 5575
 NoConn ~ 7375 5275
@@ -756,7 +757,7 @@ Text Label 4380 865  0    60   ~ 0
 +5V
 Text Label 3780 1665 2    60   ~ 0
 LED
-Text Label 7875 5275 0    60   ~ 0
+Text Label 7875 5375 0    60   ~ 0
 LED
 $Comp
 L +3.3V #PWR014
