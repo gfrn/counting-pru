@@ -1,0 +1,17 @@
+Informações para produção:
+
+O modelo "CountingPRU_v2-3_Gerber" deve ser produzido conforme o arquivo de panelização "PN-COUNTINGPRU V2.3.PCB"
+
+Dimensões da PCI: 100,0x160,0mm
+
+Dimensões do painel: 203,0x180,0mm
+
+Quantidade pçs/painel: 02pçs
+
+Maretial: PCI Dupla face fibra 1,6mm 1Oz.
+
+
+Wagner Luiz de Paula
+wagner@arossat.com.br
+www.arossat.com.br
+11 - 5666 4858
