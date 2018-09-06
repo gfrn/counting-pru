@@ -62,6 +62,17 @@ def sendVariable(variableID, value, size):
         send_message = send_message + [ord(c) for c in struct.pack("!I",value)]
     return "".join(map(chr,includeChecksum(send_message)))
 
+def sendGroup(GroupID, values, size):
+    send_message = [0x00, 0x13] + [ord(c) for c in struct.pack("!h",size+1)] + [GroupID]
+    size_var = size / len(values)
+    if size_var == 2:
+        for value in values:
+            send_message = send_message + [ord(c) for c in struct.pack("!h",value)]
+    elif size_var == 4:
+        for value in values:
+            send_message = send_message + [ord(c) for c in struct.pack("!I",value)]
+    return "".join(map(chr,includeChecksum(send_message)))
+
 def sendMessage(ErrorCode):
     return "".join(map(chr,includeChecksum([0x00, ErrorCode, 0x00, 0x00])))
 
@@ -101,7 +112,7 @@ class Communication(Thread):
                         if(message):
                             if (verifyChecksum(message)==0):
 
-                                # Command Read
+                                # Variable Read
                                 if message[1] == 0x10:
                                     if message[4] < 0x08:
                                         con.send(sendVariable(message[4], Counting[message[4]], 4))
@@ -121,8 +132,15 @@ class Communication(Thread):
                                         sys.stdout.write(time_string() + "Read Inhibits values " + bin(inh_value) + " \n")
                                         sys.stdout.flush()
 
+                                # Group Read
+                                elif message[1] == 0x12:
+                                    if message[4] == 0x01:
+                                        con.send(sendGroup(message[4], Counting, len(Counting)*4))
+                                        sys.stdout.write(time_string() + "Read counting " + str(message[4]) + " \n")
+                                        sys.stdout.flush()
 
-                                # Command Write
+
+                                # Variable Write
                                 elif message[1] == 0x20:
                                     # Counting channels
                                     if message[4] < 0x08:
