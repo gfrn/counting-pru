@@ -117,9 +117,9 @@ class Communication(Thread):
                                         inh_value = 0
                                         for i in range (4):
                                             inh_value += GPIO.input(Inhibit[Inhibit.keys()[i]]) * (2**i)
-                                            con.send(sendVariable(message[4], inh_value, 1))
-                                            sys.stdout.write(time_string() + "Read Inhibits values " + bin(inh_value) + " \n")
-                                            sys.stdout.flush()
+                                        con.send(sendVariable(message[4], inh_value, 1))
+                                        sys.stdout.write(time_string() + "Read Inhibits values " + bin(inh_value) + " \n")
+                                        sys.stdout.flush()
 
 
                                 # Command Write
@@ -139,9 +139,9 @@ class Communication(Thread):
                                     elif message[4] == 0x09:
                                         for i in range (4):
                                             GPIO.output(Inhibit[Inhibit.keys()[i]], bool(message[5] & (1 << i)))
-                                            con.send(sendMessage(COMMAND_OK))
-                                            sys.stdout.write(time_string() + "Write Inhibits to " + bin(message[5]&0x0f) + " \n")
-                                            sys.stdout.flush()
+                                        con.send(sendMessage(COMMAND_OK))
+                                        sys.stdout.write(time_string() + "Write Inhibits to " + bin(message[5]&0x0f) + " \n")
+                                        sys.stdout.flush()
 
 
 
