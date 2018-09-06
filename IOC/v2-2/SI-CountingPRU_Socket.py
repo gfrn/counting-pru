@@ -114,15 +114,16 @@ class Communication(Thread):
 
                                 # Variable Read
                                 if message[1] == 0x10:
-                                    if message[4] < 0x08:
-                                        con.send(sendVariable(message[4], Counting[message[4]], 4))
-                                        sys.stdout.write(time_string() + "Read counting " + str(message[4]) + " \n")
-                                        sys.stdout.flush()
                                     # TimeBase
-                                    elif message[4] == 0x08:
+                                    if message[4] == 0x00:
                                         con.send(sendVariable(message[4], TimeBase, 2))
                                         sys.stdout.write(time_string() + "Read time base " + str(TimeBase) + " \n")
                                         sys.stdout.flush()
+                                    elif message[4] <= 0x08:
+                                        con.send(sendVariable(message[4], Counting[message[4]-1], 4))
+                                        sys.stdout.write(time_string() + "Read counting " + str(message[4]-1) + " \n")
+                                        sys.stdout.flush()
+
                                     # Inhibit pins - 8 bits: X X X X B2 A2 B1 A1
                                     elif message[4] == 0x09:
                                         inh_value = 0
@@ -136,22 +137,22 @@ class Communication(Thread):
                                 elif message[1] == 0x12:
                                     if message[4] == 0x01:
                                         con.send(sendGroup(message[4], Counting, len(Counting)*4))
-                                        sys.stdout.write(time_string() + "Read counting " + str(message[4]) + " \n")
+                                        sys.stdout.write(time_string() + "Read Group " + str(message[4]) + " \n")
                                         sys.stdout.flush()
 
 
                                 # Variable Write
                                 elif message[1] == 0x20:
-                                    # Counting channels
-                                    if message[4] < 0x08:
-                                        con.send(sendMessage(ERROR_READ_ONLY))
-                                        sys.stdout.write(time_string() + "Write to counting " + str(message[4]) + " not permited.\n")
-                                        sys.stdout.flush()
                                     # TimeBase
-                                    elif message[4] == 0x08:
+                                    if message[4] == 0x00:
                                         TimeBase = message[5]*256 + message[6]
                                         con.send(sendMessage(COMMAND_OK))
                                         sys.stdout.write(time_string() + "Write time base " + str(TimeBase) + " \n")
+                                        sys.stdout.flush()
+                                    # Counting channels
+                                    elif message[4] <= 0x08:
+                                        con.send(sendMessage(ERROR_READ_ONLY))
+                                        sys.stdout.write(time_string() + "Write to counting " + str(message[4]) + " not permited.\n")
                                         sys.stdout.flush()
                                     # Inhibit pins - 8 bits: X X X X B2 A2 B1 A1
                                     elif message[4] == 0x09:
