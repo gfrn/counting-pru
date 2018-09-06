@@ -56,7 +56,9 @@ def verifyChecksum(list_values):
 
 def sendVariable(variableID, value, size):
     send_message = [0x00, 0x11] + [ord(c) for c in struct.pack("!h",size+1)] + [variableID]
-    if size == 2:
+    if size == 1:
+        send_message = send_message + [value]
+    elif size == 2:
         send_message = send_message + [ord(c) for c in struct.pack("!h",value)]
     elif size == 4:
         send_message = send_message + [ord(c) for c in struct.pack("!I",value)]
