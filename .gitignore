@@ -4,6 +4,9 @@
 *.hp~
 *.dts~
 *.sh~
-*/build/
-*/dist/
-*/CountingPRU.egg-info/
+src/v2-2/library/build/
+src/v2-2/library/dist/
+src/v2-2/library/CountingPRU.egg-info/
+src/v2-3/library/build/
+src/v2-3/library/dist/
+src/v2-3/library/CountingPRU.egg-info/
