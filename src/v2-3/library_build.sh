@@ -50,4 +50,6 @@ echo ".."
 echo "..."
 echo "Done!"
 
+rm -r CountingPRU.egg-info/ dist/ build/
+
 cd ..
