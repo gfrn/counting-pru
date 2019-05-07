@@ -7,11 +7,15 @@ import socket, struct
 from threading import Event, Thread
 import Adafruit_BBIO.GPIO as GPIO
 import CountingPRU
+import redis
 
+# Redis connection
+r = redis.StrictRedis(host='localhost', port=6379, db=0, password = "controle")
 
 # Variable for timebase counting
 global TimeBase
 TimeBase = 1
+r.set("TimeBase",TimeBase)
 
 # Variable for counting values [LNLS1, LNLS2, LNLS3, LNLS4, LNLS5, LNLS6, Bergoz1, Bergoz2]
 global Counting
@@ -203,3 +207,7 @@ net.start()
 # Main loop - Counting Values!
 while 1:
     Counting = CountingPRU.Counting(TimeBase)
+    r.set("All", ";".join([str(i) for i in Counting]))
+    for i in range(8):
+        r.set("Count"+str(i), Counting[i])
+
