@@ -16,6 +16,12 @@ r = redis.StrictRedis(host='localhost', port=6379, db=0, password = "controle")
 global TimeBase
 TimeBase_file = "TimeBase.info"
 
+# Timebase file does not exist? Create it.
+if not os.path.isfile(TimeBase_file):
+    with open(TimeBase_file,'w') as f:
+        f.write("{}\n".format(60))
+
+# Get timebase from file in device
 with open(TimeBase_file) as f:
     TimeBase = int(f.readlines()[0].split('\n')[0])
 
