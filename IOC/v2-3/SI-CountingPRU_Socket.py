@@ -14,11 +14,17 @@ r = redis.StrictRedis(host='localhost', port=6379, db=0, password = "controle")
 
 # Variable for timebase counting
 global TimeBase
-TimeBase = 1
+TimeBase_file = "TimeBase.info"
+
+with open(TimeBase_file) as f:
+    TimeBase = int(f.readlines()[0].split('\n')[0])
+
 r.set("TimeBase",TimeBase)
 
 # Variable for counting values [LNLS1, LNLS2, LNLS3, LNLS4, LNLS5, LNLS6, Bergoz1, Bergoz2]
 global Counting
+Counting = [0]*8
+
 
 # Inhibit pins - Bergoz
 Inhibit = {"A1":"P9_14", "B1":"P9_16", "A2":"P9_13", "B2":"P9_15"}
@@ -152,6 +158,9 @@ class Communication(Thread):
                                     # TimeBase
                                     if message[4] == 0x00:
                                         TimeBase = message[5]*256 + message[6]
+                                        r.set("TimeBase",TimeBase)
+                                        with open(TimeBase_file,'w') as f:
+                                            f.write("{}\n".format(TimeBase))
                                         con.send(sendMessage(COMMAND_OK))
                                         sys.stdout.write(time_string() + "Write time base " + str(TimeBase) + " \n")
                                         sys.stdout.flush()
