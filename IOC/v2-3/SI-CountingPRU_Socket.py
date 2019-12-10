@@ -220,8 +220,10 @@ net.start()
 
 
 # Main loop - Counting Values!
+# Counting list stores countings/second, multiplied by 1000
 while 1:
-    Counting = CountingPRU.Counting(TimeBase)
+    CurrentTimeBase = TimeBase
+    Counting = [1000*value/float(CurrentTimeBase) for value in CountingPRU.Counting(CurrentTimeBase)]
     r.set("All", ";".join([str(i) for i in Counting]))
     for i in range(8):
         r.set("Count"+str(i), Counting[i])
