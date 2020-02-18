@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 import sys, os, traceback
 import time, datetime
 import socket, struct
@@ -9,28 +8,25 @@ import Adafruit_BBIO.GPIO as GPIO
 import CountingPRU
 import redis
 
-# Redis connection
-r = redis.StrictRedis(host='localhost', port=6379, db=0, password = "controle")
-
 # Variable for timebase counting
 global TimeBase
-TimeBase_file = "TimeBase.info"
 
-# Timebase file does not exist? Create it.
-if not os.path.isfile(TimeBase_file):
-    with open(TimeBase_file,'w') as f:
-        f.write("{}\n".format(60))
+# Connect to Redis DB
+redis_db = redis.StrictRedis(host='127.0.0.1', port=6379)
 
-# Get timebase from file in device
-with open(TimeBase_file) as f:
-    TimeBase = int(f.readlines()[0].split('\n')[0])
+# Get value from Redis key. If does not exist, create it.
+if not redis_db.exists("TimeBase"):
+    sys.stdout.write("Creating TimeBase variable\n")
+    sys.stdout.flush()
+    redis_db.set("TimeBase", 60)
+    redis_db.save()
 
-r.set("TimeBase",TimeBase)
+TimeBase = float(redis_db.get("TimeBase"))
+
 
 # Variable for counting values [LNLS1, LNLS2, LNLS3, LNLS4, LNLS5, LNLS6, Bergoz1, Bergoz2]
 global Counting
 Counting = [0]*8
-
 
 # Inhibit pins - Bergoz
 Inhibit = {"A1":"P9_14", "B1":"P9_16", "A2":"P9_13", "B2":"P9_15"}
@@ -112,6 +108,7 @@ class Communication(Thread):
                 self.tcp.bind(("", self.port))
                 self.tcp.listen(1)
                 sys.stdout.write(time_string() + "TCP/IP Server on port " + str(self.port) + " started.\n")
+                sys.stdout.write(time_string() + "Timebase: {}.\n".format(TimeBase))
                 sys.stdout.flush()
 
                 while (True):
@@ -135,12 +132,8 @@ class Communication(Thread):
                                     # TimeBase
                                     if message[4] == 0x00:
                                         con.send(sendVariable(message[4], TimeBase, 2))
-                                        sys.stdout.write(time_string() + "Read time base " + str(TimeBase) + " \n")
-                                        sys.stdout.flush()
                                     elif message[4] <= 0x08:
                                         con.send(sendVariable(message[4], Counting[message[4]-1], 4))
-                                        sys.stdout.write(time_string() + "Read counting " + str(message[4]-1) + " \n")
-                                        sys.stdout.flush()
 
                                     # Inhibit pins - 8 bits: X X X X B2 A2 B1 A1
                                     elif message[4] == 0x09:
@@ -148,15 +141,11 @@ class Communication(Thread):
                                         for i in range (4):
                                             inh_value += GPIO.input(Inhibit[Inhibit.keys()[i]]) * (2**i)
                                         con.send(sendVariable(message[4], inh_value, 1))
-                                        sys.stdout.write(time_string() + "Read Inhibits values " + bin(inh_value) + " \n")
-                                        sys.stdout.flush()
 
                                 # Group Read
                                 elif message[1] == 0x12:
                                     if message[4] == 0x01:
                                         con.send(sendGroup(message[4], Counting, len(Counting)*4))
-                                        sys.stdout.write(time_string() + "Read Group " + str(message[4]) + " \n")
-                                        sys.stdout.flush()
 
 
                                 # Variable Write
@@ -164,17 +153,16 @@ class Communication(Thread):
                                     # TimeBase
                                     if message[4] == 0x00:
                                         TimeBase = message[5]*256 + message[6]
-                                        r.set("TimeBase",TimeBase)
-                                        with open(TimeBase_file,'w') as f:
-                                            f.write("{}\n".format(TimeBase))
+                                        redis_db.set("TimeBase",TimeBase)
+                                        redis_db.save()
+                                        #with open(TimeBase_file,'w') as f:
+                                        #    f.write("{}\n".format(TimeBase))
                                         con.send(sendMessage(COMMAND_OK))
                                         sys.stdout.write(time_string() + "Write time base " + str(TimeBase) + " \n")
                                         sys.stdout.flush()
                                     # Counting channels
                                     elif message[4] <= 0x08:
                                         con.send(sendMessage(ERROR_READ_ONLY))
-                                        sys.stdout.write(time_string() + "Write to counting " + str(message[4]) + " not permited.\n")
-                                        sys.stdout.flush()
                                     # Inhibit pins - 8 bits: X X X X B2 A2 B1 A1
                                     elif message[4] == 0x09:
                                         for i in range (4):
@@ -224,7 +212,3 @@ net.start()
 while 1:
     CurrentTimeBase = TimeBase
     Counting = [1000*value/float(CurrentTimeBase) for value in CountingPRU.Counting(CurrentTimeBase)]
-    r.set("All", ";".join([str(i) for i in Counting]))
-    for i in range(8):
-        r.set("Count"+str(i), Counting[i])
-
