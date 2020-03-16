@@ -8,11 +8,15 @@ import Adafruit_BBIO.GPIO as GPIO
 import CountingPRU
 import redis
 
-# Variable for timebase counting
-global TimeBase
+# Variable for timebase counting and Serial Numbers
+global TimeBase, SerialNumber
+BSMP_ID_SERIALNUMBER_CHANNEL = {11:'1', 12:'2', 13:'3', 14:'4', 15:'5', 16:'6', 17:'7', 18:'8'}
 
 # Connect to Redis DB
 redis_db = redis.StrictRedis(host='127.0.0.1', port=6379)
+
+
+
 
 # Get value from Redis key. If does not exist, create it.
 if not redis_db.exists("TimeBase"):
@@ -22,6 +26,15 @@ if not redis_db.exists("TimeBase"):
     redis_db.save()
 
 TimeBase = float(redis_db.get("TimeBase"))
+
+
+# Get Serial Numbers from Redis DB
+for channel in BSMP_ID_SERIALNUMBER_CHANNEL.keys():
+    if not redis_db.hexists('DetectorSerialNumber', BSMP_ID_SERIALNUMBER_CHANNEL[channel]):
+        redis_db.hset('DetectorSerialNumber', BSMP_ID_SERIALNUMBER_CHANNEL[channel], 0)
+
+
+
 
 
 # Variable for counting values [LNLS1, LNLS2, LNLS3, LNLS4, LNLS5, LNLS6, Bergoz1, Bergoz2]
@@ -142,6 +155,11 @@ class Communication(Thread):
                                             inh_value += GPIO.input(Inhibit[Inhibit.keys()[i]]) * (2**i)
                                         con.send(sendVariable(message[4], inh_value, 1))
 
+                                    # SerialNumbers
+                                    elif message[4] >= 11 and message[4] <= 18:
+                                        con.send(sendVariable(message[4], int(redis_db.hget("DetectorSerialNumber", BSMP_ID_SERIALNUMBER_CHANNEL[message[4]])), 1))
+
+
                                 # Group Read
                                 elif message[1] == 0x12:
                                     if message[4] == 0x01:
@@ -154,9 +172,10 @@ class Communication(Thread):
                                     if message[4] == 0x00:
                                         TimeBase = message[5]*256 + message[6]
                                         redis_db.set("TimeBase",TimeBase)
-                                        redis_db.save()
-                                        #with open(TimeBase_file,'w') as f:
-                                        #    f.write("{}\n".format(TimeBase))
+                                        try:
+                                            redis_db.save()
+                                        except:
+                                            pass
                                         con.send(sendMessage(COMMAND_OK))
                                         sys.stdout.write(time_string() + "Write time base " + str(TimeBase) + " \n")
                                         sys.stdout.flush()
@@ -171,6 +190,16 @@ class Communication(Thread):
                                         sys.stdout.write(time_string() + "Write Inhibits to " + bin(message[5]&0x0f) + " \n")
                                         sys.stdout.flush()
 
+                                    # SerialNumbers
+                                    elif message[4] >= 11 and message[4] <= 18:
+                                        redis_db.hset("DetectorSerialNumber", BSMP_ID_SERIALNUMBER_CHANNEL[message[4]], message[5])
+                                        try:
+                                            redis_db.save()
+                                        except:
+                                            pass
+                                        con.send(sendMessage(COMMAND_OK))
+                                        sys.stdout.write(time_string() + "Write SN {} to device attached to ch {}\n".format(message[5], BSMP_ID_SERIALNUMBER_CHANNEL[message[4]]))
+                                        sys.stdout.flush()
 
 
                             else:
