@@ -1,13 +1,12 @@
 #!/usr/bin/env python-sirius
 # -*- coding: utf-8 -*-
 import sys
-import os
 import traceback
 import time
 import datetime
 import socket
 import struct
-from threading import Event, Thread
+from threading import Thread
 import Adafruit_BBIO.GPIO as GPIO
 import CountingPRU
 import redis
@@ -99,7 +98,7 @@ def sendVariable(variableID, value, size):
     elif size == 4:
         send_message = send_message + [ord(c)
                                        for c in struct.pack("!I", value)]
-    return "".join(map(chr, includeChecksum(send_message)))
+    return "".join(map(chr, includeChecksum(send_message))).encode()
 
 
 def sendGroup(GroupID, values, size):
@@ -113,11 +112,11 @@ def sendGroup(GroupID, values, size):
         for value in values:
             send_message = send_message + \
                 [ord(c) for c in struct.pack("!I", value)]
-    return "".join(map(chr, includeChecksum(send_message)))
+    return "".join(map(chr, includeChecksum(send_message))).encode()
 
 
 def sendMessage(ErrorCode):
-    return "".join(map(chr, includeChecksum([0x00, ErrorCode, 0x00, 0x00])))
+    return "".join(map(chr, includeChecksum([0x00, ErrorCode, 0x00, 0x00]))).encode()
 
 
 # Thead to send and receive values on demand

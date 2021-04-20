@@ -13,11 +13,8 @@
 from pcaspy import Driver, Alarm, Severity, SimpleServer
 from queue import PriorityQueue
 import Adafruit_BBIO.GPIO as GPIO
-import traceback
 import threading
 import time
-import serial
-import socket
 import sys
 import CountingPRU
 
