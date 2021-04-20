@@ -89,29 +89,29 @@ def verifyChecksum(list_values):
 
 
 def sendVariable(variableID, value, size):
-    send_message = [0x00, 0x11] + [ord(c) for c in struct.pack("!h", size)]
+    send_message = [0x00, 0x11]
+    send_message += struct.pack("!h", size)
+    
     if size == 1:
-        send_message = send_message + [value]
+        send_message += value
     elif size == 2:
-        send_message = send_message + [ord(c)
-                                       for c in struct.pack("!h", value)]
+        send_message += struct.pack("!h", value)
     elif size == 4:
-        send_message = send_message + [ord(c)
-                                       for c in struct.pack("!I", value)]
+        send_message += struct.pack("!I", value)
     return "".join(map(chr, includeChecksum(send_message))).encode()
 
 
 def sendGroup(GroupID, values, size):
-    send_message = [0x00, 0x13] + [ord(c) for c in struct.pack("!h", size)]
+    send_message = [0x00, 0x13]
+    send_message += struct.pack("!h", size)
+
     size_var = size / len(values)
     if size_var == 2:
         for value in values:
-            send_message = send_message + \
-                [ord(c) for c in struct.pack("!h", value)]
+            send_message += struct.pack("!h", value)
     elif size_var == 4:
         for value in values:
-            send_message = send_message + \
-                [ord(c) for c in struct.pack("!I", value)]
+            send_message += struct.pack("!I", value)
     return "".join(map(chr, includeChecksum(send_message))).encode()
 
 
@@ -155,7 +155,7 @@ class Communication(Thread):
 
                     while (True):
                         # Get message
-                        message = [ord(i) for i in con.recv(100)]
+                        message = con.recv(100)
                         if(message):
                             if (verifyChecksum(message) == 0):
 
