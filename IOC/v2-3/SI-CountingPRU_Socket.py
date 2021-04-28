@@ -67,7 +67,7 @@ def time_string():
     return(datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S.%f")[:-4] + " - ")
 
 
-def includeChecksum(list_values):
+def includeChecksum(list_values) -> list:
     counter = 0
     i = 0
     while (i < len(list_values)):
@@ -75,10 +75,10 @@ def includeChecksum(list_values):
         i += 1
     counter = (counter & 0xFF)
     counter = (256 - counter) & 0xFF
-    return list_values + [counter]
+    return bytes(list_values + [counter])
 
 
-def verifyChecksum(list_values):
+def verifyChecksum(list_values) :
     counter = 0
     i = 0
     while (i < len(list_values)):
@@ -88,9 +88,14 @@ def verifyChecksum(list_values):
     return(counter)
 
 
-def sendVariable(variableID, value, size):
+def sendVariable(variableID, value, size) -> bytes:
     send_message = [0x00, 0x11]
     send_message += struct.pack("!h", size)
+
+    value = int(value)
+
+    sys.stdout.write("Send Var value:" + str(value) + "\n")
+    sys.stdout.flush()
     
     if size == 1:
         send_message += value
@@ -98,10 +103,10 @@ def sendVariable(variableID, value, size):
         send_message += struct.pack("!h", value)
     elif size == 4:
         send_message += struct.pack("!I", value)
-    return "".join(map(chr, includeChecksum(send_message))).encode()
+    return includeChecksum(send_message)
 
 
-def sendGroup(GroupID, values, size):
+def sendGroup(GroupID, values, size) -> bytes:
     send_message = [0x00, 0x13]
     send_message += struct.pack("!h", size)
 
@@ -112,11 +117,11 @@ def sendGroup(GroupID, values, size):
     elif size_var == 4:
         for value in values:
             send_message += struct.pack("!I", value)
-    return "".join(map(chr, includeChecksum(send_message))).encode()
+    return includeChecksum(send_message))
 
 
-def sendMessage(ErrorCode):
-    return "".join(map(chr, includeChecksum([0x00, ErrorCode, 0x00, 0x00]))).encode()
+def sendMessage(ErrorCode) -> bytes:
+    return includeChecksum([0x00, ErrorCode, 0x00, 0x00])
 
 
 # Thead to send and receive values on demand
