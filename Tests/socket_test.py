@@ -1,3 +1,6 @@
+#!/usr/bin/env python-sirius
+# -*- coding: utf-8 -*-
+
 import socket
 import unittest
 
@@ -129,9 +132,8 @@ class SocketTest(unittest.TestCase):
 
         # Inhibits back to 0
         self.assertEqual(data[4], 0x00)
-        
-unittest.main()
 
-    
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
 
 
