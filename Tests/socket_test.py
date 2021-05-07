@@ -25,9 +25,9 @@ def include_checksum(list_values) -> list:
     return bytes(list_values + [counter])
 
 class SocketTest(unittest.TestCase):
-
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    
     def test_read(self) -> None:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((host, 5000))
 
         s.sendall(include_checksum([0x01, 0x10, 0x00, 0x01, 0x03]))
@@ -38,7 +38,6 @@ class SocketTest(unittest.TestCase):
         self.assertTrue(checksum(data))
 
     def test_timebase_write_redis(self) -> None:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((host, 5000))
 
         s.sendall(include_checksum([0x01, 0x20, 0x00, 0x00, 0x00, 0x00, 0x1e]))
@@ -69,7 +68,6 @@ class SocketTest(unittest.TestCase):
         
 
     def test_serial_redis(self) -> None:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((host, 5000))
 
         # Writes serial no., then reads it back. 
@@ -90,7 +88,6 @@ class SocketTest(unittest.TestCase):
         s.close()
 
     def test_group_read(self) -> None:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((host, 5000))
 
         s.sendall(include_checksum([0x01, 0x12, 0x00, 0x00, 0x01]))
@@ -102,7 +99,6 @@ class SocketTest(unittest.TestCase):
         self.assertEqual(data[1], 0x13)
 
     def test_inhibit(self) -> None:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((host, 5000))
 
         s.sendall(include_checksum([0x01, 0x20, 0x00, 0x00, 0x09, 0x0c]))
