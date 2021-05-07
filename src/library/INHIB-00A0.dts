@@ -1,0 +1,36 @@
+/dts-v1/;
+/plugin/;
+
+/{
+
+	compatible = "ti,beaglebone", "ti,beaglebone-black", "ti,beaglebone-green";
+	part-number = "gpio_inhibit";
+	version = "00A0";
+
+	fragment@0 {
+		target = <&am33xx_pinmux>;
+		__overlay__ {
+			pinctrl_inhibit: gpio_inhibit_Pins {
+				pinctrl-single,pins = <
+					0x074 0x07 /* P9_13 29 */
+					0x048 0x07 /* P9_14 18 */
+					0x040 0x07 /* P9_15 16 */
+					0x04c 0x07 /* P9_16 19 OUTPUT MODE7 pulldown */
+				>;
+			};
+		};
+	};
+
+
+	fragment@1 {
+		target = <&ocp>;
+		__overlay__ {
+			test_helper: helper {
+				compatible = "bone-pinmux-helper";
+				pinctrl-names = "default";
+				pinctrl-0 = <&pinctrl_inhibit>;
+				status = "okay";
+			};
+		};
+	};
+};
