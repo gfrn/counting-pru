@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo start > /sys/class/remoteproc/remoteproc2/state
+echo start > /sys/class/remoteproc/remoteproc1/state
+
 config-pin P8_12 pruout
 config-pin P9_27 pruout
 config-pin P9_31 pruout
