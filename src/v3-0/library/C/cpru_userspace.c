@@ -1,7 +1,5 @@
-#include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <string.h>
 #include <sys/poll.h>
 #include <stdint.h>
 
@@ -16,11 +14,7 @@ int8_t count_pru(uint32_t time_base, uint32_t *data) {
 
     pfd.fd = open(DEVICE_NAME, O_RDWR);
 
-    if (pfd.fd < 0)
-    {
-        printf("Failed to open %s: %d %d\n", DEVICE_NAME, sfd.fd, pfd.fd);
-        return -1;
-    }
+    if (pfd.fd < 0) return -1;
 
     write(pfd.fd, "-", 2);
     usleep(time_base-400); // There is a 400 us offset

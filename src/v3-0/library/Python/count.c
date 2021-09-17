@@ -1,7 +1,5 @@
-#include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <string.h>
 #include <sys/poll.h>
 #include <Python.h>
 #include <stdint.h>
@@ -21,12 +19,7 @@ static PyObject *count_pru(PyObject *self, PyObject *args) {
     if(!PyArg_ParseTuple(args, "I", &time_base)) return NULL;
 
     pfd.fd = open(DEVICE_NAME, O_RDWR);
-
-    if (pfd.fd < 0)
-    {
-        printf("Failed to open %s: %d \n", DEVICE_NAME, pfd.fd);
-        return NULL;
-    }
+    if (pfd.fd < 0) return NULL;
 
     write(pfd.fd, "-", 2);
     usleep(time_base-400); // There is a 400 us offset
