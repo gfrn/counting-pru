@@ -46,7 +46,7 @@ count4:
 	CLR		OUT4
 ret_loop:
 	SET		OUT4
-	QBBC   		count1, r31.b3, 6	; If kick bit is set (message received), return
+	QBBC   		count1, r31.b3, 7	; If kick bit is set (message received), return
 
 end_count:
 	SBBO		&COUNT1, r14, 0, 4

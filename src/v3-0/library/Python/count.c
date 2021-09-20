@@ -4,29 +4,50 @@
 #include <Python.h>
 #include <stdint.h>
 
-#define DEVICE_NAME "/dev/rpmsg_pru30"
-#define DEVICE_LOCATION "/sys/class/remoteproc/remoteproc1/state"
+#define DEVICE_NAME0 "/dev/rpmsg_pru30"
+#define DEVICE_NAME1 "/dev/rpmsg_pru31"
 #define MAX_BUFFER_SIZE 512
 
 char readBuf[MAX_BUFFER_SIZE];
 
 static PyObject *count_pru(PyObject *self, PyObject *args) {
     struct pollfd pfd;
-    uint8_t offset = 0;
-    uint32_t time_base, count;
+    uint8_t pru, wr_stat;
+    uint32_t time_base;
     PyObject* py_counts = PyList_New(4);
 
-    if(!PyArg_ParseTuple(args, "I", &time_base)) return NULL;
+    if(!PyArg_ParseTuple(args, "Ih", &time_base, &pru)) return NULL;
 
-    pfd.fd = open(DEVICE_NAME, O_RDWR);
-    if (pfd.fd < 0) return NULL;
+    if (pru > 1) {
+        PyErr_SetString(PyExc_ValueError, "Invalid PRU selected (only PRUs 0 and 1 are available)");
+        return NULL;
+    }
+            
+    switch (pru) {
+        case 0:
+            pfd.fd = open(DEVICE_NAME0, O_RDWR);
+            break;
+        case 1:
+            pfd.fd = open(DEVICE_NAME1, O_RDWR);
+            break;
+    }
 
-    write(pfd.fd, "-", 2);
+    if (pfd.fd < 0) {
+        PyErr_SetString(PyExc_IOError, "Cannot communicate with selected PRU");
+        return NULL;
+    }
+
+    wr_stat = write(pfd.fd, "-", 2) == -1;
     usleep(time_base-400); // There is a 400 us offset
-    write(pfd.fd, "-", 2);
+    if (wr_stat || write(pfd.fd, "-", 2) == -1) {
+        PyErr_SetString(PyExc_IOError, "Cannot communicate with selected PRU");
+        return NULL;
+    }
 
     if (read(pfd.fd, readBuf, MAX_BUFFER_SIZE))
     {
+        uint8_t offset = 0;
+        uint32_t count = 0;
         for (int i = 0; i < 4; i++) {
             count = (readBuf[offset+3] << 24) | (readBuf[offset+2] << 16) | (readBuf[offset+1] << 8) | readBuf[offset];
             PyObject* py_count = Py_BuildValue("I", count);
