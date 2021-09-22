@@ -57,7 +57,7 @@ void main(void)
             CT_INTC.SICR_bit.STS_CLR_IDX = FROM_ARM_HOST;
             while (pru_rpmsg_receive(&transport, &src, &dst, payload, &len) == PRU_RPMSG_SUCCESS) {
                 asm_count(&data);
-                pru_rpmsg_send(&transport, dst, src, data, 4);
+                pru_rpmsg_send(&transport, dst, src, data, 16);
             }
         }
     }

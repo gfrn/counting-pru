@@ -53,3 +53,4 @@ end_count:
 	SBBO		&COUNT2, r14, 4, 4
 	SBBO		&COUNT3, r14, 8, 4
 	SBBO		&COUNT4, r14, 12, 4	; Copy pulse count to PRU memory
+	JMP		r3.w2
