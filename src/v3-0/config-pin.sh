@@ -1,7 +1,12 @@
 #!/bin/bash
 
-echo start > /sys/class/remoteproc/remoteproc2/state
+cp ~/counting-pru/src/bin/pru*.out /lib/firmware/
+
+echo pru0.out > /sys/class/remoteproc/remoteproc1/firmware
+echo pru1.out > /sys/class/remoteproc/remoteproc2/firmware
+
 echo start > /sys/class/remoteproc/remoteproc1/state
+echo start > /sys/class/remoteproc/remoteproc2/state
 
 config-pin P8_12 pruout
 config-pin P9_27 pruout
