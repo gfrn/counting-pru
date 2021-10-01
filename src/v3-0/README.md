@@ -24,7 +24,7 @@ cd library/Python && python3 setup.py install
 ### Counting (Python)
 ```python
 from count_pru import count_pru
-count_pru.count_pru(1000000, 0) # 1 second, PRU 0
+count_pru(1000000, 0) # 1 second, PRU 0
 ```
 
 ### Counting (C)

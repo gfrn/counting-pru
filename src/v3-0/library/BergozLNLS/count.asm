@@ -41,7 +41,7 @@ count4:
 	ADD			COUNT4, COUNT4, 1	; P9_28
 	CLR			OUT4
 ret_loop:
-	SET			OUT4
+	SET		OUT4
 	QBBC   		count1, r31.b3, 6	; If kick bit is set (message received), return
 
 end_count:
@@ -49,4 +49,4 @@ end_count:
 	SBBO		&COUNT2, r14, 4, 4
 	SBBO		&COUNT3, r14, 8, 4
 	SBBO		&COUNT4, r14, 12, 4	; Copy pulse count to PRU memory
-	JMP         r3.w2
+	JMP         	r3.w2
