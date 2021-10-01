@@ -1,20 +1,16 @@
 ; PRU0 - CountingPRU
 
 	.define r16, 		COUNT1
-	.define r30.t1,		OUT1		; P9_29
-	.define r31.t3, 	IN1			; P9_28
+	.define r30.t4,		OUT1		; P8_12
 
 	.define r17, 		COUNT2
-	.define r30.t0,		OUT2		; P9_31
-	.define r31.t2, 	IN2			; P9_30
+	.define r30.t5,		OUT2		; P9_27
 
 	.define r18, 		COUNT3
-	.define r30.t5,		OUT3		; P9_27
-	.define r31.t16, 	IN3			; P9_24
+	.define r30.t0,		OUT3		; P9_31
 
 	.define r19, 		COUNT4
-	.define r30.t14,	OUT4		; P8_12
-	.define r31.t15, 	IN4			; P8_15
+	.define r30.t1,		OUT4		; P9_29
 	.global asm_count
 
 asm_count:
@@ -24,25 +20,25 @@ asm_count:
 	ZERO		&COUNT4,4
 
 count1:
-	QBBC		count2, r31.b0, 3
+	QBBC		count2, r31.b0, 15	; P8_15
 	ADD			COUNT1, COUNT1, 1
 	CLR			OUT1
 
 count2:
-	QBBC		count3, r31.b0, 2
-	ADD			COUNT2, COUNT2, 1
+	QBBC		count3, r31.b0, 16
+	ADD			COUNT2, COUNT2, 1	; P9_24
 	CLR			OUT2
 
 count3:
 	LDI			r30, 0x03
-	QBBC		count4, r31.b2, 0
-	ADD			COUNT3, COUNT3, 1
+	QBBC		count4, r31, 2
+	ADD			COUNT3, COUNT3, 1	; P9_30
 	CLR			OUT3
 
 count4:
 	SET			OUT3
-	QBBC		ret_loop, r31.b1, 6
-	ADD			COUNT4, COUNT4, 1
+	QBBC		ret_loop, r31, 3
+	ADD			COUNT4, COUNT4, 1	; P9_28
 	CLR			OUT4
 ret_loop:
 	SET			OUT4
