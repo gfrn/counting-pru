@@ -33,14 +33,14 @@ count2:
 count3:
 	SET			OUT2
 	QBBC		count4, r31, 2
-	ADD			COUNT3, COUNT3, 1	; P9_30
-	CLR			OUT3
+	ADD		COUNT3, COUNT3, 1	; P9_30
+	CLR		OUT3
 
 count4:
-	SET			OUT3
+	SET		OUT3
 	QBBC		ret_loop, r31, 3
-	ADD			COUNT4, COUNT4, 1	; P9_28
-	CLR			OUT4
+	ADD		COUNT4, COUNT4, 1	; P9_28
+	CLR		OUT4
 ret_loop:
 	SET			OUT4
 	QBBC   		count1, r31.b3, 6	; If kick bit is set (message received), return
