@@ -21,25 +21,25 @@ asm_count:
 
 count1:
 	QBBC		count2, r31.b0, 15	; P8_15
-	ADD			COUNT1, COUNT1, 1
-	CLR			OUT1
+	ADD		COUNT1, COUNT1, 1
+	CLR		OUT1
 
 count2:
 	QBBC		count3, r31.b0, 16
-	ADD			COUNT2, COUNT2, 1	; P9_24
-	CLR			OUT2
+	ADD		COUNT2, COUNT2, 1	; P9_24
+	CLR		OUT2
 
 count3:
-	LDI			r30, 0x03
+	LDI		r30, 0x03
 	QBBC		count4, r31, 2
-	ADD			COUNT3, COUNT3, 1	; P9_30
-	CLR			OUT3
+	ADD		COUNT3, COUNT3, 1	; P9_30
+	CLR		OUT3
 
 count4:
-	SET			OUT3
+	SET		OUT3
 	QBBC		ret_loop, r31, 3
-	ADD			COUNT4, COUNT4, 1	; P9_28
-	CLR			OUT4
+	ADD		COUNT4, COUNT4, 1	; P9_28
+	CLR		OUT4
 ret_loop:
 	SET		OUT4
 	QBBC   		count1, r31.b3, 6	; If kick bit is set (message received), return
