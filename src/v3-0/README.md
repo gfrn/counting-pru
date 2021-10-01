@@ -23,7 +23,7 @@ cd library/Python && python3 setup.py install
 
 ### Counting (Python)
 ```python
-from count_pru import count_pru
+from count_pru import count_pru, count_both
 count_pru(1000000, 0) # 1 second, PRU 0
 count_both(1000000) # Returns data for both PRUs
 ```
