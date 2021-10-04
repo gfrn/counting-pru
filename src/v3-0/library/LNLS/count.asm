@@ -20,35 +20,35 @@ asm_count:
 	ZERO	&COUNT4,4
 
 count1:
-	QBBC	count2, r31, 5			; P8_42
+	QBBC	count2, r31, 5		; P8_42
 	ADD	COUNT1, COUNT1, 1
 	CLR	OUT1
 
 count2:
-	SET		OUT1
+	SET	OUT1
 	QBBC	count3, r31, 4		; P8_41
-	ADD		COUNT2, COUNT2, 1
-	CLR		OUT2
+	ADD	COUNT2, COUNT2, 1
+	CLR	OUT2
 
 count3:
-	SET		OUT2
-	LDI		r30, 0x03
+	SET	OUT2
+	LDI	r30, 0x03
 	QBBC	count4, r31, 7		; P8_40
-	ADD		COUNT3, COUNT3, 1
-	CLR		OUT3
+	ADD	COUNT3, COUNT3, 1
+	CLR	OUT3
 
 count4:
 	SET	OUT3
-	QBBC	ret_loop, r31, 6		; P8_39
+	QBBC	ret_loop, r31, 6	; P8_39
 	ADD	COUNT4, COUNT4, 1
 	CLR	OUT4
 ret_loop:
 	SET	OUT4
-	QBBC   	count1, r31.b3, 7		; If kick bit is set (message received), return
+	QBBC   	count1, r31.b3, 7	; If kick bit is set (message received), return
 
 end_count:
 	SBBO	&COUNT1, r14, 0, 4
 	SBBO	&COUNT2, r14, 4, 4
 	SBBO	&COUNT3, r14, 8, 4
-	SBBO	&COUNT4, r14, 12, 4		; Copy pulse count to PRU memory
+	SBBO	&COUNT4, r14, 12, 4	; Copy pulse count to PRU memory
 	JMP	r3.w2
