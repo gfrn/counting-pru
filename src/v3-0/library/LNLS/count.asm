@@ -32,7 +32,6 @@ count2:
 
 count3:
 	SET	OUT2
-	LDI	r30, 0x03
 	QBBC	count4, r31, 7		; P8_40
 	ADD	COUNT3, COUNT3, 1
 	CLR	OUT3
