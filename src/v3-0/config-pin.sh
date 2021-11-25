@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cp ~/counting-pru/src/bin/pru*.out /lib/firmware/
+cp ~/counting-pru/bin/pru*.out /lib/firmware/
 
 echo pru0.out > /sys/class/remoteproc/remoteproc1/firmware
 echo pru1.out > /sys/class/remoteproc/remoteproc2/firmware

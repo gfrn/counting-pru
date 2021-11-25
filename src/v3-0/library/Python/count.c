@@ -132,13 +132,13 @@ static PyMethodDef CountMethod[] = {
 
 static struct PyModuleDef countingpru_module = {
     PyModuleDef_HEAD_INIT,
-    "countingpru",
+    "CountingPRU",
     "Python interface for CountingPRU's counting function",
     -1,
     CountMethod
 };
 
-PyMODINIT_FUNC PyInit_count_pru(void) {
+PyMODINIT_FUNC PyInit_CountingPRU(void) {
     return PyModule_Create(&countingpru_module);
 }
 

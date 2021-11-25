@@ -9,7 +9,7 @@ import socket
 import struct
 from threading import Thread
 import Adafruit_BBIO.GPIO as GPIO
-from count_pru import count_pru, count_both
+from CountingPRU import count_pru, count_both
 import redis
 import queue
 import threading
